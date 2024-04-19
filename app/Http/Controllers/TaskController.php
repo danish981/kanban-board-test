@@ -10,10 +10,8 @@ use App\Models\User;
 
 use Illuminate\Http\Request;
 
-class TaskController extends Controller
-{
-    public function kanban()
-    {
+class TaskController extends Controller {
+    public function kanban() {
         return view('tasks.index', [
             'card_count' => Task::count()
         ]);
@@ -22,24 +20,21 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         return Phase::with('tasks.user')->get();
     }
 
     /**
      * Display a listing of the Users resource.
      */
-    public function users()
-    {
+    public function users() {
         return User::all();
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -47,8 +42,7 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      * @param StoreTaskRequest $request
      */
-    public function store(StoreTaskRequest $request)
-    {
+    public function store(StoreTaskRequest $request) {
         $task = new Task();
 
         $task->name = $request['name'];
@@ -63,8 +57,7 @@ class TaskController extends Controller
         // Task::create($request->validated());
     }
 
-    public function stats()
-    {
+    public function stats() {
         $tasksUsers = [];
         foreach (User::get() as $user) {
             $tasksUsers[] = [
@@ -73,14 +66,13 @@ class TaskController extends Controller
             ];
         }
 
-        $tasks = Task::whereNotNull('completed_at')->get();
 
-        $completedThisMonth = $tasks
+        $completedThisMonth = Task::whereNotNull('completed_at')
             ->whereYear('completed_at', now()->year)
             ->whereMonth('completed_at', now()->month)
             ->count();
 
-        $completedThisWeek = $tasks
+        $completedThisWeek =  Task::whereNotNull('completed_at')
             ->whereBetween('completed_at', [now()->startOfWeek(), now()->endOfWeek()])
             ->count();
 
@@ -96,16 +88,14 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
-    {
+    public function show(Task $task) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
-    {
+    public function edit(Task $task) {
         //
     }
 
@@ -114,8 +104,7 @@ class TaskController extends Controller
      * @param Request $request
      * @param $taskId
      */
-    public function update(Request $request, $taskId): void
-    {
+    public function update(Request $request, $taskId): void {
         $task = Task::find($request['id']);
 
         $task->name = $request['name'];
@@ -133,8 +122,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      * @param Task $task
      */
-    public function destroy(Task $task): void
-    {
+    public function destroy(Task $task): void {
         Task::destroy($task->id);
     }
 }
