@@ -45,14 +45,25 @@ class PhaseController extends Controller {
         $phase = Phase::find($request['phase_id']);
         if ($phase) {
             $phase['is_completion_phase'] = true;
+            $tasksCount = $phase->tasks->count();
             $phase->save();
+
             $phase->tasks()->update([
                 'phase_id' => Phase::whereName('Completed')->first()->id,
                 'completed_at' => now()->format('Y-m-d H:i:s')
             ]);
-            return response()->json(['marked' => true]);
+
+            return response()->json([
+                'message' => $tasksCount . ' tasks moved to completed phase',
+                'is_marked' => true
+            ]);
         }
-        return response()->json(['marked' => false]);
+
+        return response()->json([
+            'message' => 'Unable to remove the phase, please try again later',
+            'is_marked' => false
+        ], 409);
+        
     }
 
     /**

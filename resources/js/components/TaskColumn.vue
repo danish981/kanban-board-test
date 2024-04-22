@@ -3,7 +3,7 @@
   <div
     :id="props.phase_id"
     class="w-[300px] bg-sky-950 rounded-lg shadow-lg scrollable-div"
-    :class="{ '!bg-green-800': kanban.phases[props.phase_id].is_completion_phase }"
+
   >
     <div class="p-4">
       <div class="flex items-center justify-between">
@@ -37,6 +37,7 @@
         :key="task.id"
         :class="{ 'bg-green-200': task.is_completed }"
       />
+
       <div
         class="w-full flex items-center justify-between bg-white text-gray-900 hover:cursor-pointer shadow-md rounded-lg p-3 relative"
         @click="createTask"
@@ -72,16 +73,19 @@ const createTask = function () {
 
 const markAsCompletionPhase = async function () {
   try {
-    await axios.post("/api/phases/mark-as-completion", { phase_id: props.phase_id });
+    const response = await axios.post("/api/phases/mark-as-completion", { phase_id: props.phase_id });
 
     kanban.phases[props.phase_id].is_completion_phase = true;
     kanban.phases[props.phase_id].tasks.forEach((task) => {
       task.is_completed = true;
     });
 
+    toast.success(response.data.message);
+
     await refreshTasks();
   } catch (error) {
     console.error("There was an error marking the phase as completion phase:", error);
+    toast.error(error.response.data.message);
   }
 };
 
