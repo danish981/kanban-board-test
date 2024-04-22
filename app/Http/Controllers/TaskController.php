@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 
-use App\Models\Phase;
-use App\Models\Task;
-use App\Models\User;
+use App\Models\{Phase, Task, User};
 
 use Illuminate\Http\Request;
 

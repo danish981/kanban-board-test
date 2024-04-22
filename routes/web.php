@@ -3,9 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 
-
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', static function () {
     return view('welcome');
@@ -31,12 +29,9 @@ Route::get('/test', function () {
 //        $task->save();
 //    }
 
-$firstDayOfMonth = now()->firstOfMonth()->addDays(20);
+    $firstDayOfMonth = now()->firstOfMonth()->addDays(20);
 
- dd(\App\Models\Task::where('completed_at', '>=' , $firstDayOfMonth)->get()->pluck('completed_at'));
-
-
+    dd(\App\Models\Task::where('completed_at', '>=', $firstDayOfMonth)->get()->pluck('completed_at'));
 });
-
 
 require __DIR__ . '/auth.php';
