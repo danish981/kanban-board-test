@@ -11,14 +11,14 @@
           {{ kanban.phases[props.phase_id].name }}
         </h2>
         <TrashIcon
-          v-if="kanban.phases[props.phase_id].is_completion_phase === 0"
+          v-if="kanban.phases[props.phase_id].name != 'Completed' "
           title="delete phase"
           @click="deletePhase"
           class="mb-3 h-6 w-6 text-white hover:cursor-pointer"
           aria-hidden="true"
         />
         <CheckIcon
-          v-if="kanban.phases[props.phase_id].is_completion_phase === 0"
+          v-if="kanban.phases[props.phase_id].name != 'Completed' "
           title="mark as completion phase"
           @click="markAsCompletionPhase"
           class="mb-3 h-6 w-6 text-white hover:cursor-pointer"
@@ -53,6 +53,9 @@ import { useKanbanStore } from "../stores/kanban";
 import { PlusIcon, CheckIcon, TrashIcon } from "@heroicons/vue/20/solid";
 // import { refreshTasks } from '../components/KanbanBoard.vue';
 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 const kanban = useKanbanStore();
 
 const props = defineProps({
@@ -85,9 +88,11 @@ const markAsCompletionPhase = async function () {
 const deletePhase = async function () {
   try {
     const response = await axios.delete("/api/phases/" + props.phase_id);
+    toast.success(response.data.message);
     await refreshTasks();
   } catch (error) {
     console.error("There was an error deleting the phase!", error);
+    toast.error(error.response.data.message);
   }
 };
 
@@ -118,12 +123,10 @@ async function moveCompletedTasks(completedPhaseId) {
 <style scoped>
 
 .scrollable-div {
-
     height: 40rem;
     overflow-y: scroll;
     border: 1px solid #ccc;
   }
-
 
   .scrollable-div::-webkit-scrollbar {
     display: none;
@@ -133,5 +136,4 @@ async function moveCompletedTasks(completedPhaseId) {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
 </style>

@@ -78,20 +78,35 @@ class PhaseController extends Controller {
      * @return JsonResponse
      */
     public function destroy(Phase $phase) {
+
         if ($phase->name !== 'Completed') {
+
+            $phaseName = $phase->name;
+            $phaseTasksCount = $phase->tasks->count();
+
             foreach ($phase->tasks as $task) {
                 $task->delete();
             }
 
             $phase->delete();
             return response()->json([
-                'message' => 'Phase removed',
+                'deleted_phase' => $phaseName,
+                'message' => 'Phase ' . $phaseName . ' and ' . $phaseTasksCount . ' of its underlying tasks deleted',
                 'deleted' => true
             ]);
+
+        } else if($phase->name === 'Completed') {
+            return response()->json([
+                'message' => 'Cannot delete the completd phase',
+                'deleted' => false
+            ], 409);
         }
+
         return response()->json([
-            'message' => 'Cannot delete the completd phase',
-            'deleted' => true
-        ]);
+            'message' => 'Unable to delete the phase, please try again later',
+            'deleted' => false
+        ], 409);
+
+
     }
 }
