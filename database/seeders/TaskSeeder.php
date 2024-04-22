@@ -9,6 +9,7 @@ use App\Models\Phase;
 
 class TaskSeeder extends Seeder {
     public function run(): void {
+
         $phaseIds = Phase::whereNot('name', 'Completed')->get()->pluck('id')->toArray();
         $userIds = User::get()->pluck('id')->toArray();
 

@@ -31,10 +31,9 @@ Route::get('/test', function () {
 //        $task->save();
 //    }
 
+$firstDayOfMonth = now()->firstOfMonth()->addDays(20);
 
-
-
-// ...
+ dd(\App\Models\Task::where('completed_at', '>=' , $firstDayOfMonth)->get()->pluck('completed_at'));
 
 
 });

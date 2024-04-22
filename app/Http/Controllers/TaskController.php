@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller {
+
     public function kanban() {
         return view('tasks.index', [
             'card_count' => Task::count()
@@ -58,6 +59,7 @@ class TaskController extends Controller {
     }
 
     public function stats() {
+
         $tasksUsers = [];
         foreach (User::get() as $user) {
             $tasksUsers[] = [
@@ -66,13 +68,18 @@ class TaskController extends Controller {
             ];
         }
 
-        $completedThisMonth = Task::whereNotNull('completed_at')
-            ->whereYear('completed_at', now()->year)
-            ->whereMonth('completed_at', now()->month)
+        $completedTasks = Task::with('phase')
+            // ->where('phase_id', $completedPhaseId)
+            ->whereHas('phase', function($phase) {
+                $phase->whereName('Completed');
+            })
+            ->get();
+
+        $completedThisMonth = $completedTasks->where('completed_at', '>=', now()->startOfMonth())
             ->count();
 
-        $completedThisWeek =  Task::whereNotNull('completed_at')
-            ->whereBetween('completed_at', [now()->startOfWeek(), now()->endOfWeek()])
+        $completedThisWeek = $completedTasks->where('completed_at', '>=', now()->startOfWeek())
+            ->where('completed_at', '<=', now()->endOfWeek())
             ->count();
 
         return view('tasks.task-stats', [
@@ -82,6 +89,7 @@ class TaskController extends Controller {
                 'this_month' => $completedThisMonth
             ]
         ]);
+
     }
 
     /**
@@ -124,5 +132,4 @@ class TaskController extends Controller {
     public function destroy(Task $task): void {
         Task::destroy($task->id);
     }
-
 }
