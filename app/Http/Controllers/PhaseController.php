@@ -48,6 +48,13 @@ class PhaseController extends Controller {
             $tasksCount = $phase->tasks->count();
             $phase->save();
 
+            if($tasksCount == 0) {
+                return response()->json([
+                    'message' => 'This phase has no tasks in it',
+                    'is_marked' => false
+                ], 409);
+            }
+
             $phase->tasks()->update([
                 'phase_id' => Phase::whereName('Completed')->first()->id,
                 'completed_at' => now()->format('Y-m-d H:i:s')
@@ -63,7 +70,7 @@ class PhaseController extends Controller {
             'message' => 'Unable to remove the phase, please try again later',
             'is_marked' => false
         ], 409);
-        
+
     }
 
     /**

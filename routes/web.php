@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,6 +30,13 @@ Route::get('/test', function () {
 //        $task->completed_at = '2024-04-' . random_int(1, 30) . ' 08:07:45';
 //        $task->save();
 //    }
+
+
+
+
+// ...
+
+
 });
 
 
