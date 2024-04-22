@@ -3,7 +3,7 @@
   <div class="max-w-7xl flex-1 mx-auto flex flex-col overflow-auto sm:px-6 lg:px-8">
     <div class="w-full mb-6 flex">
       <Teleport to="body">
-        
+
         <generic-modal :show="kanban.creatingTask" @close="kanban.creatingTask = false" key="createTaskModal">
           <div>
             <div class="mt-3 sm:mt-2">
@@ -60,11 +60,11 @@
 
               <div class="mt-8">
                 <label for="taskPhase" class="block text-sm font-medium leading-6 text-gray-900">Phase</label>
-                <select v-model="kanban.creatingTaskProps.phase_id" id="taskPhase"
-                        class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
+                <select v-model="kanban.creatingTaskProps.phase_id" id="taskPhase" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
                   <option v-for="phase in kanban.phases" :key="phase.id" :value="phase.id">{{ phase.name }}</option>
                 </select>
               </div>
+
             </div>
 
             <div class="mt-5 sm:mt-6">
@@ -401,8 +401,10 @@ const deleteCard = async (id) => {
         const response = await axios.delete('/api/tasks/' + id);
         await refreshTasks();
         kanban.unselectTask();
+        toast.success('Task deleted successfully!');
     } catch (error) {
         console.error('There was an error deleting the task!', error);
+        toast.error('There was an error updating the task!');
     }
 }
 

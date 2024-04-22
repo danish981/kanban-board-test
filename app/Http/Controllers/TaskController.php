@@ -66,7 +66,6 @@ class TaskController extends Controller {
             ];
         }
 
-
         $completedThisMonth = Task::whereNotNull('completed_at')
             ->whereYear('completed_at', now()->year)
             ->whereMonth('completed_at', now()->month)
@@ -125,4 +124,5 @@ class TaskController extends Controller {
     public function destroy(Task $task): void {
         Task::destroy($task->id);
     }
+
 }
