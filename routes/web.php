@@ -22,16 +22,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('tasks', TaskController::class)->except(['index', 'show']);
 });
 
-Route::get('/test', function () {
-    // 2024-04-19 08:07:45
-//    foreach (Task::all() as $task) {
-//        $task->completed_at = '2024-04-' . random_int(1, 30) . ' 08:07:45';
-//        $task->save();
-//    }
-
-    $firstDayOfMonth = now()->firstOfMonth()->addDays(20);
-
-    dd(\App\Models\Task::where('completed_at', '>=', $firstDayOfMonth)->get()->pluck('completed_at'));
-});
 
 require __DIR__ . '/auth.php';
